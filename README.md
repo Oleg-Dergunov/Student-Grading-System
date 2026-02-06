@@ -24,11 +24,6 @@ A Flask web application for managing users, courses, and student records. Suppor
 ### 🔧 Installation & Usage  
 Python 3 is required.
 
-```bash
-pip install -r requirements.txt
-
-```
-
 Run the application:
 
 ```bash
@@ -38,6 +33,7 @@ python app.py
 ```
 
 🔐 Test login
+
 You can use an existing administrator account to log in:
 
 ID: 1
