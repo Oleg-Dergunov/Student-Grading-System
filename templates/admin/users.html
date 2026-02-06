@@ -23,7 +23,7 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Active</th>
+            <th>Status</th>
             <th></th>
         </tr>
 
@@ -40,7 +40,7 @@
             <td>{{ u.firstName }} {{ u.lastName }}</td>
             <td>{{ u.email }}</td>
             <td>{{ role_names[u.role] }}</td>
-            <td>{{ "Yes" if u.active else "No" }}</td>
+            <td>{{ "Active" if u.active else "Inactive" }}</td>
             <td>
                 <center><a href="/admin/edit_user/{{ u.id }}">Edit</a></center>
             </td>
