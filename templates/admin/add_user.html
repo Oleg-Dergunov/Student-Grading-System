@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+</head>
+
+<body>
+    
+    {% extends "base.html" %}
+    {% block content %}    
+    
+
+    <h1>Add New User</h1>
+
+    {% if error %}
+    <p style="color:red; font-weight:bold;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+
+        <label>First name:</label><br>
+        <input type="text" name="firstName" value="{{ firstName or '' }}" required><br><br>
+
+        <label>Last name:</label><br>
+        <input type="text" name="lastName" value="{{ lastName or '' }}" required><br><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" value="{{ email or '' }}" required><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <label>Role:</label><br>
+        <select name="role" required>
+            <option value="student" {% if role=="student" %}selected{% endif %}>Student</option>
+            <option value="teacher" {% if role=="teacher" %}selected{% endif %}>Teacher</option>
+            <option value="admin" {% if role=="admin" %}selected{% endif %}>Admin</option>
+        </select>
+        <br><br>
+
+        <button type="submit">Create User</button>
+    </form>
+
+    <br>
+    <a href="/admin/users">← Back to Manage Users</a>
+
+
+    
+    {% endblock %}
+
+</body>
+
+</html>

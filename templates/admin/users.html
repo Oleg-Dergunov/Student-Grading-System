@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+</head>
+
+<body>
+    
+    {% extends "base.html" %}
+    {% block content %}    
+    
+    <h1>Manage Users</h1>
+
+    <a href="/admin/add_user">Add User</a>
+    <br><br>
+
+    <table border="1" cellpadding="8" style="width:100%; border-collapse:collapse;">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Active</th>
+            <th></th>
+        </tr>
+
+        {% set role_names = {
+        "student": "Student",
+        "teacher": "Teacher",
+        "admin": "Administrator"
+        } %}
+
+
+        {% for u in users %}
+        <tr>
+            <td>{{ "%05d" | format(u.id) }}</td>
+            <td>{{ u.firstName }} {{ u.lastName }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ role_names[u.role] }}</td>
+            <td>{{ "Yes" if u.active else "No" }}</td>
+            <td>
+                <center><a href="/admin/edit_user/{{ u.id }}">Edit</a></center>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    {% endblock %}
+
+</body>
+
+</html>

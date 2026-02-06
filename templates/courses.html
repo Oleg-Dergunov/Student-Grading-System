@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Courses</title>
+</head>
+
+<body>
+
+    {% extends "base.html" %}
+    {% block content %}    
+    
+    <h1>Courses</h1>
+
+    {% if current_user.role == "admin" %}
+    <a href="/admin/add_course">Add Course</a>
+    <br><br>
+    {% endif %}
+
+    <table style="width: 100%; border-collapse: collapse;" border="1" cellpadding="8">
+        <tr>
+            <th>Course name</th>
+            <th>Teacher</th>
+            {% if current_user.role == "admin" or current_user.role == "teacher" %}
+            <th>Students</th>
+            {% endif %}
+            {% if current_user.role == "admin" %}
+            <th></th>
+            {% endif %}
+        </tr>
+
+        {% for c in courses %}
+        <tr>
+            <td>{{ c.name }}</td>
+
+            <td>
+                {% if c.teacherFirstName %}
+                {{ c.teacherFirstName }} {{ c.teacherLastName }}
+                {% else %}
+                <i>No teacher assigned</i>
+                {% endif %}
+            </td>
+
+            {% if current_user.role == "admin" or current_user.role == "teacher" %}
+            <td>{{ c.studentCount }}</td>
+            {% endif %}
+
+
+            {% if current_user.role == "admin" %}
+            <td>
+                <center><a href="/admin/edit_course/{{ c.id }}">Edit</a></center>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% endblock %}
+
+</body>
+
+</html>
