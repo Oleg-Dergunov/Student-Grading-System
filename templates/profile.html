@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+
+</head>
+
+<body>
+
+    {% extends "base.html" %}
+    {% block content %}
+
+    <h1>Profile</h1>
+
+    {% if error %}
+    <p style="color:red; font-weight:bold;">{{ error }}</p>
+    {% endif %}
+
+    {% if success %}
+    <p style="color:green; font-weight:bold;">{{ success }}</p>
+    {% endif %}
+
+    {% set role_names = {
+    "student": "Student",
+    "teacher": "Teacher",
+    "admin": "Administrator"
+    } %}
+
+    <p><strong>ID:</strong> {{ "%05d" | format(current_user.id) }}</p>
+    <p><strong>First name:</strong> {{ current_user.firstName }}</p>
+    <p><strong>Last name:</strong> {{ current_user.lastName }}</p>
+    <p><strong>Role:</strong> {{ role_names[current_user.role] }}</p>
+
+    {% if not show_email_form %}
+
+    <strong>Email:</strong> {{ current_user.email }}
+    <form method="POST" style="display:inline;">
+        <input type="hidden" name="show_email_form" value="1">
+        <button type="submit" class="as-link">Change email</button>
+    </form>
+
+    <br><br>
+
+    {% else %}
+    <form method="POST">
+        <input type="hidden" name="update_email" value="1">
+
+        <strong>New email:</strong><br>
+        <input type="email" name="email" value="{{ current_user.email }}" required><br><br>
+
+        <button type="submit">Save new email</button>
+    </form>
+    <br>
+    {% endif %}
+
+    {% if not show_password_form %}
+    <form method="POST">
+        <input type="hidden" name="show_password_form" value="1">
+        <button type="submit" class="as-link">Change password</button>
+    </form>
+    {% else %}
+    <form method="POST">
+        <input type="hidden" name="change_password" value="1">
+
+        <strong>Old password:</strong><br>
+        <input type="password" name="old_password" required><br><br>
+
+        <strong>New password:</strong><br>
+        <input type="password" name="new_password" required><br><br>
+
+        <strong>Repeat new password:</strong><br>
+        <input type="password" name="repeat_password" required><br><br>
+
+        <button type="submit">Save new password</button>
+    </form>
+    {% endif %}
+
+    {% endblock %}
+
+
+</body>
+
+</html>

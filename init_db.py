@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS courses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     teacher_id INTEGER,
     FOREIGN KEY (teacher_id) REFERENCES users(id)
 )
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS enrollments (
 cursor.execute("SELECT * FROM users WHERE role = 'admin'") 
 admin_exists = cursor.fetchone() 
 if not admin_exists: 
-    cursor.execute(""" INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?) """, ("Admin", "User", "admin@example.com", "admin123", "admin")) 
+    cursor.execute(""" INSERT INTO users (firstName, lastName, email, password, role) VALUES (?, ?, ?, ?, ?) """, ("Admin", "Adminych", "admin@example.com", "admin123", "admin")) 
     print("Administrator created: admin@example.com / admin123") 
 else: 
     print("Administrator exists")
