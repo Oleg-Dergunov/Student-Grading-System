@@ -15,6 +15,22 @@ A Flask web application for managing users, courses, and student records. Suppor
 
 ✅ Role-based navigation    
 
+### 📂 Project Structure
+
+The project is organized into layers:
+
+Student-Grading-System/
+│
+├── app.py # Entry Point
+├── db.py # Database Connection and Teardown
+├── db.sqlite # Database
+│
+├── routes/ # HTTP Routes (Blueprints)
+├── services/ # Business Logic
+├── repositories/ # SQL queries
+├── templates/ # Jinja2 templates
+└── static/ # CSS, images
+
 ### 🛠 Technologies Used  
 - Python 3.x
 - Flask
