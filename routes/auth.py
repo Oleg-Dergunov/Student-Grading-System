@@ -26,6 +26,18 @@ def login_required(f):
     return wrapper
 
 
+
+# Decorator @admin_required
+def admin_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if "role" not in session or session["role"] != "admin":
+            return redirect(url_for("auth.login"))
+        return f(*args, **kwargs)
+    return wrapper
+
+
+
 # Global context processor automatically passing current_user to all templates
 @auth_bp.app_context_processor
 def inject_user():

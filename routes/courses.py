@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from routes.auth import login_required
+from routes.auth import login_required, admin_required
 from services.courses_service import get_courses_for_user, add_course
 
 courses_bp = Blueprint("courses", __name__)
@@ -24,9 +24,8 @@ def courses():
 
 @courses_bp.route("/courses/add_course", methods=["GET", "POST"])
 @login_required
+@admin_required
 def add_course_route():
-    if session.get("role") != "admin":
-        return redirect(url_for("auth.login"))
 
     if request.method == "POST":
         name = request.form["name"]

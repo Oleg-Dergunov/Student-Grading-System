@@ -42,7 +42,7 @@
             <td>{{ role_names[u.role] }}</td>
             <td>{{ "Active" if u.active else "Inactive" }}</td>
             <td>
-                <center><a href="/users/edit_user/{{ u.id }}">Edit</a></center>
+                <center><a href="{{ url_for('users.edit_user', user_id=u.id) }}">Edit</a></center>
             </td>
         </tr>
         {% endfor %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Edit User {{ "%05d" | format(user.id) }}</h1>
+
+{% if error %}
+<p style="color:red; font-weight:bold;">{{ error }}</p>
+{% endif %}
+
+{% if success %}
+<p style="color:green; font-weight:bold;">{{ success }}</p>
+{% endif %}
+
+{% set role_names = {
+"student": "Student",
+"teacher": "Teacher",
+"admin": "Administrator"
+} %}
+
+<form method="POST">
+
+    <strong>First name:</strong><br>
+    <input type="text" name="firstName" value="{{ user.firstName }}" required><br><br>
+
+    <strong>Last name:</strong><br>
+    <input type="text" name="lastName" value="{{ user.lastName }}" required><br><br>
+
+    <strong>Email:</strong><br>
+    <input type="email" name="email" value="{{ user.email }}" required><br><br>
+
+    <strong>Role:</strong><br>
+    <select name="role">
+        {% for key, label in role_names.items() %}
+        <option value="{{ key }}" {% if user.role==key %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <strong>Status:</strong><br>
+    <select name="status">
+        <option value="1" {% if user.active==1 %}selected{% endif %}>Active</option>
+        <option value="0" {% if user.active==0 %}selected{% endif %}>Inactive</option>
+    </select><br><br>
+
+    <strong>New password (optional):</strong><br>
+    <input type="password" name="new_password"><br><br>
+
+    <button type="submit">Save changes</button>
+</form>
+
+<br>
+<a href="/users">← Back to Manage Users</a>
+
+{% endblock %}
