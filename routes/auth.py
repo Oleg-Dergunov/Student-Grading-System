@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from functools import wraps
 from db import get_db
+from services.auth_service import authenticate_user
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -38,38 +39,19 @@ def inject_user():
     return dict(current_user=user)
 
 
-# Login page
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         identifier = request.form["identifier"]
         password = request.form["password"]
 
-        db = get_db()
+        user, error = authenticate_user(identifier, password)
 
-        # If the user entered a number → search by ID
-        if identifier.isdigit():
-            user = db.execute(
-                "SELECT * FROM users WHERE id = ? AND password = ?",
-                (int(identifier), password)
-            ).fetchone()
-        else:
-            # Otherwise we consider it an email
-            user = db.execute(
-                "SELECT * FROM users WHERE LOWER(email) = LOWER(?) AND password = ?",
-                (identifier, password)
-            ).fetchone()
+        if error:
+            return render_template("login.html", error=error)
 
-        # User not found or wrong password
-        if not user:
-            return render_template("login.html", error="Invalid credentials")
-
-        # User found but inactive
-        if user["active"] == 0:
-            return render_template("login.html", error="User is inactive")
-
-        # User is active → login
-        session["user_id"] = user["id"] 
+        # Successful login
+        session["user_id"] = user["id"]
         session["role"] = user["role"]
 
         return redirect(url_for("courses.courses"))
