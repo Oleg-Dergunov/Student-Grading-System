@@ -1,23 +1,14 @@
-import sqlite3
-from db import get_db
+from repositories.users_repository import fetch_all_users, insert_user
 
 
 def get_all_users():
-    db = get_db()
-    return db.execute("SELECT * FROM users").fetchall()
+    return fetch_all_users()
 
 
 def create_user(firstName: str, lastName: str, email: str, password: str, role: str):
-    db = get_db()
+    success, error = insert_user(firstName, lastName, email, password, role)
 
-    try:
-        db.execute("""
-            INSERT INTO users (firstName, lastName, email, password, role, active)
-            VALUES (?, ?, ?, ?, ?, 1)
-        """, (firstName, lastName, email, password, role))
+    if not success:
+        return None, error
 
-        db.commit()
-        return "User created", None
-
-    except sqlite3.IntegrityError:
-        return None, "Email already exists"
+    return "User created", None

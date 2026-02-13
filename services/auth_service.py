@@ -1,27 +1,21 @@
-from db import get_db
+from repositories.auth_repository import (
+    find_user_by_id_and_password,
+    find_user_by_email_and_password
+)
 
 
 def authenticate_user(identifier: str, password: str):
     """
-    Возвращает:
-    - (user, None) если всё ок
-    - (None, "текст ошибки") если ошибка
+    Returns:
+    - (user, None) if success
+    - (None, "error text") if failure
     """
-
-    db = get_db()
 
     # If the user entered a number → search by ID
     if identifier.isdigit():
-        user = db.execute(
-            "SELECT * FROM users WHERE id = ? AND password = ?",
-            (int(identifier), password)
-        ).fetchone()
+        user = find_user_by_id_and_password(int(identifier), password)
     else:
-        # Otherwise we consider it an email
-        user = db.execute(
-            "SELECT * FROM users WHERE LOWER(email) = LOWER(?) AND password = ?",
-            (identifier, password)
-        ).fetchone()
+        user = find_user_by_email_and_password(identifier, password)
 
     if not user:
         return None, "Invalid credentials"

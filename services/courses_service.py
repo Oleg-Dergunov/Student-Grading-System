@@ -1,75 +1,25 @@
-import sqlite3
-from db import get_db
+from repositories.courses_repository import (
+    fetch_all_courses_for_admin,
+    fetch_courses_for_teacher,
+    fetch_courses_for_student,
+    insert_course
+)
 
 
 def get_courses_for_user(role: str, user_id: int):
-    db = get_db()
-
     if role == "admin":
-        query = """
-            SELECT 
-                courses.id,
-                courses.name,
-                users.firstName AS teacherFirstName,
-                users.lastName AS teacherLastName,
-                (
-                    SELECT COUNT(*) 
-                    FROM enrollments 
-                    WHERE enrollments.course_id = courses.id
-                ) AS studentCount
-            FROM courses
-            LEFT JOIN users ON courses.teacher_id = users.id
-        """
-        return db.execute(query).fetchall()
+        return fetch_all_courses_for_admin()
 
     if role == "teacher":
-        query = """
-            SELECT 
-                courses.id,
-                courses.name,
-                users.firstName AS teacherFirstName,
-                users.lastName AS teacherLastName,
-                (
-                    SELECT COUNT(*) 
-                    FROM enrollments 
-                    WHERE enrollments.course_id = courses.id
-                ) AS studentCount
-            FROM courses
-            LEFT JOIN users ON courses.teacher_id = users.id
-            WHERE courses.teacher_id = ?
-        """
-        return db.execute(query, (user_id,)).fetchall()
+        return fetch_courses_for_teacher(user_id)
 
-    query = """
-        SELECT 
-            courses.id,
-            courses.name,
-            users.firstName AS teacherFirstName,
-            users.lastName AS teacherLastName,
-            (
-                SELECT COUNT(*) 
-                FROM enrollments 
-                WHERE enrollments.course_id = courses.id
-            ) AS studentCount
-        FROM enrollments
-        JOIN courses ON enrollments.course_id = courses.id
-        LEFT JOIN users ON courses.teacher_id = users.id
-        WHERE enrollments.student_id = ?
-    """
-    return db.execute(query, (user_id,)).fetchall()
-
+    return fetch_courses_for_student(user_id)
 
 
 def add_course(name: str):
-    db = get_db()
+    success, error = insert_course(name)
 
-    try:
-        db.execute(
-            "INSERT INTO courses (name, teacher_id) VALUES (?, NULL)",
-            (name,)
-        )
-        db.commit()
-        return "Course added", None
+    if not success:
+        return None, error
 
-    except sqlite3.IntegrityError:
-        return None, "A course with this name already exists"
+    return "Course added", None
