@@ -14,7 +14,7 @@
     
     <h1>Manage Users</h1>
 
-    <a href="/admin/add_user">Add User</a>
+    <a href="/users/add_user">Add User</a>
     <br><br>
 
     <table border="1" cellpadding="8" style="width:100%; border-collapse:collapse;">
@@ -42,7 +42,7 @@
             <td>{{ role_names[u.role] }}</td>
             <td>{{ "Active" if u.active else "Inactive" }}</td>
             <td>
-                <center><a href="/admin/edit_user/{{ u.id }}">Edit</a></center>
+                <center><a href="/users/edit_user/{{ u.id }}">Edit</a></center>
             </td>
         </tr>
         {% endfor %}

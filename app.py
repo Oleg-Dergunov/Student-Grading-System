@@ -260,7 +260,7 @@ def profile():
 
 
 # Add a course page
-@app.route("/admin/add_course", methods=["GET", "POST"])
+@app.route("/courses/add_course", methods=["GET", "POST"])
 @login_required
 def add_course():
     if session.get("role") != "admin":
@@ -277,7 +277,7 @@ def add_course():
             db.commit()
         except sqlite3.IntegrityError:
             return render_template(
-                "admin/add_course.html",
+                "courses/add_course.html",
                 error="A course with this name already exists",
                 name=name
             )
@@ -285,11 +285,11 @@ def add_course():
 
         return redirect(url_for("courses"))
 
-    return render_template("admin/add_course.html")
+    return render_template("courses/add_course.html")
 
 
 # Users page
-@app.route("/admin/users")
+@app.route("/users")
 @login_required
 def manage_users():
     if session.get("role") != "admin":
@@ -298,12 +298,12 @@ def manage_users():
     db = get_db()
     users = db.execute("SELECT * FROM users").fetchall()
 
-    return render_template("admin/users.html", users=users)
+    return render_template("users.html", users=users)
 
 
 
 # Add a user page
-@app.route("/admin/add_user", methods=["GET", "POST"])
+@app.route("/users/add_user", methods=["GET", "POST"])
 @login_required
 def add_user():
     if session.get("role") != "admin":
@@ -329,7 +329,7 @@ def add_user():
 
         except sqlite3.IntegrityError:
             return render_template(
-                "admin/add_user.html",
+                "users/add_user.html",
                 error="Email already exists",
                 firstName=firstName,
                 lastName=lastName,
@@ -337,7 +337,7 @@ def add_user():
                 role=role
             )
 
-    return render_template("admin/add_user.html")
+    return render_template("users/add_user.html")
 
 
 

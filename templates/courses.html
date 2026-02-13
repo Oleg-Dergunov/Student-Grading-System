@@ -14,7 +14,7 @@
     <h1>Courses</h1>
 
     {% if current_user.role == "admin" %}
-    <a href="/admin/add_course">Add Course</a>
+    <a href="/courses/add_course">Add Course</a>
     <br><br>
     {% endif %}
 
@@ -49,7 +49,7 @@
 
             {% if current_user.role == "admin" %}
             <td>
-                <center><a href="/admin/edit_course/{{ c.id }}">Edit</a></center>
+                <center><a href="/courses/edit_course/{{ c.id }}">Edit</a></center>
             </td>
             {% endif %}
         </tr>
