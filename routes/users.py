@@ -49,7 +49,7 @@ def add_user():
 
 
 # Edit user page (admin only)
-@users_bp.route("/users/<int:user_id>", methods=["GET", "POST"])
+@users_bp.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
 @login_required
 @admin_required
 def edit_user(user_id):
