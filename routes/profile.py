@@ -6,6 +6,7 @@ from services.profile_service import update_email, change_password
 profile_bp = Blueprint("profile", __name__)
 
 
+# Profile page
 @profile_bp.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():

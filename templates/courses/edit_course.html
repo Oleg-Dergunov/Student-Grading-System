@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Edit Course {{ course.name }}</h1>
+
+{% if error %}
+<p style="color:red; font-weight:bold;">{{ error }}</p>
+{% endif %}
+
+{% if success %}
+<p style="color:green; font-weight:bold;">{{ success }}</p>
+{% endif %}
+
+<form method="POST">
+
+    <label>Course name:</label><br>
+    <input type="text" name="name" value="{{ course.name }}" required>
+    <br><br>
+
+    <label>Teacher:</label><br>
+
+    {# ---------- Form parameters for the component ---------- #}
+
+    {% set items = [] %}
+
+    {% set _ = items.append({
+    "id": "",
+    "label": "— Not assigned —",
+    "search": "not assigned"
+    }) %}
+
+    {% for t in teachers %}
+    {% set _ = items.append({
+    "id": t.id,
+    "label": "%05d"|format(t.id) ~ " - " ~ t.last_name ~ " " ~ t.first_name,
+    "search": "%05d"|format(t.id) ~ " " ~ t.last_name ~ " " ~ t.first_name
+    }) %}
+    {% endfor %}
+
+    {% if course.teacher_id %}
+    {% set current_label = "%05d"|format(course.teacher_id) ~ " - " ~ course.teacher_last_name ~ " " ~
+    course.teacher_first_name %}
+    {% else %}
+    {% set current_label = "" %}
+    {% endif %}
+
+    {% set placeholder = current_label if current_label else "— Not assigned —" %}
+    {% set name = "teacher_id" %}
+    {% set current_id = course.teacher_id %}
+
+    {# ---------- Inserting a component ---------- #}
+    {% include "components/dropdown.html" %}
+
+    <br>
+
+    <button type="submit">Save changes</button>
+</form>
+<br>
+<a href="/courses">← Back to courses</a>
+{% endblock %}

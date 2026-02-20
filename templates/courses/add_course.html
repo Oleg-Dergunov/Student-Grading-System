@@ -1,37 +1,23 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <title>Add Course</title>
-</head>
-
-<body>
-
-    {% extends "base.html" %}
-    {% block content %}
+{% extends "base.html" %}
+{% block content %}
 
 
-    <h1>Add New Course</h1>
-    
-    {% if error %}
-    <p style="color:red; font-weight:bold;">{{ error }}</p>
-    {% endif %}
+<h1>Add New Course</h1>
 
-    <form method="POST">
-        <label>Course name:</label><br>
-        <input type="text" name="name" required><br><br>
+{% if error %}
+<p style="color:red; font-weight:bold;">{{ error }}</p>
+{% endif %}
 
-        <button type="submit">Create</button>
-    </form>
+<form method="POST">
+    <label>Course name:</label><br>
+    <input type="text" name="name" required><br><br>
 
-    <br>
-    <a href="/courses">← Back to courses</a>
+    <button type="submit">Create</button>
+</form>
+
+<br>
+<a href="/courses">← Back to courses</a>
 
 
-    
-    {% endblock %}
 
-</body>
-
-</html>
+{% endblock %}

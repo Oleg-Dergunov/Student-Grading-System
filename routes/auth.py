@@ -51,6 +51,7 @@ def inject_user():
     return dict(current_user=user)
 
 
+# Login page
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":

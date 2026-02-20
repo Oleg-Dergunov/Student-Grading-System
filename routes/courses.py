@@ -5,12 +5,14 @@ from services.courses_service import get_courses_for_user, add_course
 courses_bp = Blueprint("courses", __name__)
 
 
+# Main route. Leads to courses/ if logged in, otherwise to login/
 @courses_bp.route("/")
 @login_required
 def index():
     return redirect(url_for("courses.courses"))
 
 
+# Courses page
 @courses_bp.route("/courses")
 @login_required
 def courses():
@@ -22,6 +24,7 @@ def courses():
     return render_template("courses.html", courses=courses)
 
 
+# Add a course page
 @courses_bp.route("/courses/add_course", methods=["GET", "POST"])
 @login_required
 @admin_required
@@ -42,3 +45,48 @@ def add_course_route():
         return redirect(url_for("courses.courses"))
 
     return render_template("courses/add_course.html")
+
+
+# Edit course page
+@courses_bp.route("/courses/<int:course_id>/edit", methods=["GET", "POST"])
+@login_required
+@admin_required
+def edit_course(course_id):
+    from services.courses_service import (
+        load_course_for_edit,
+        load_teachers_for_course_edit,
+        process_course_edit
+    )
+
+    error = None
+    success = None
+
+    try:
+        course = load_course_for_edit(course_id)
+    except ValueError as e:
+        return str(e), 404
+
+    if request.method == "POST":
+        try:
+            course, changed = process_course_edit(course_id, request.form)
+            if changed:
+                success = "Course updated successfully"
+        except ValueError as e:
+            error = str(e)
+
+    teachers = load_teachers_for_course_edit()
+
+    return render_template(
+        "courses/edit_course.html",
+        course=course,
+        teachers=teachers,
+        error=error,
+        success=success
+    )
+
+
+# Assessments page
+@courses_bp.route("/courses/<int:course_id>/assessments")
+@login_required
+def course_assessments_stub(course_id):
+    return "Assessments page is temporarily disabled for debugging", 200

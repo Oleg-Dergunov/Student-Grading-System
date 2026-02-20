@@ -25,20 +25,20 @@ def manage_users():
 @admin_required
 def add_user():
     if request.method == "POST":
-        firstName = request.form["firstName"]
-        lastName = request.form["lastName"]
+        first_name = request.form["first_name"].strip()
+        last_name = request.form["last_name"].strip()
         email = request.form["email"].lower().strip()
         password = request.form["password"]
         role = request.form["role"]
 
-        success, error = create_user(firstName, lastName, email, password, role)
+        success, error = create_user(first_name, last_name, email, password, role)
 
         if error:
             return render_template(
                 "users/add_user.html",
                 error=error,
-                firstName=firstName,
-                lastName=lastName,
+                first_name=first_name,
+                last_name=last_name,
                 email=email,
                 role=role
             )
@@ -62,8 +62,8 @@ def edit_user(user_id):
     success = None
 
     if request.method == "POST":
-        first = request.form["firstName"].strip()
-        last = request.form["lastName"].strip()
+        first_name = request.form["first_name"].strip()
+        last_name = request.form["last_name"].strip()
         email = request.form["email"].lower().strip()
         role = request.form["role"]
         active = int(request.form["status"])
@@ -71,8 +71,8 @@ def edit_user(user_id):
 
         success, error = admin_update_user(
             user_id,
-            first,
-            last,
+            first_name,
+            last_name,
             email,
             role,
             active,

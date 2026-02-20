@@ -1,0 +1,16 @@
+<div class="dropdown-container">
+
+    <input type="text" class="dropdown-input" placeholder="{{ placeholder }}" autocomplete="off">
+
+    <input type="hidden" name="{{ name }}" class="dropdown-hidden"
+        value="{{ current_id if current_id is not none else '' }}">
+
+    <div class="dropdown-list" style="display:none;">
+        {% for item in items %}
+        <div class="dropdown-item" data-id="{{ item.id if item.id is not none else '' }}"
+            data-search="{{ item.search }}">
+            {{ item.label }}
+        </div>
+        {% endfor %}
+    </div>
+</div>

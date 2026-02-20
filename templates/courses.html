@@ -1,63 +1,49 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Courses</title>
-</head>
+<h1>Courses</h1>
 
-<body>
+{% if current_user.role == "admin" %}
+<a href="/courses/add_course">Add Course</a>
+<br><br>
+{% endif %}
 
-    {% extends "base.html" %}
-    {% block content %}    
-    
-    <h1>Courses</h1>
+<table style="width: 100%; border-collapse: collapse;" border="1" cellpadding="8">
+    <tr>
+        <th>Course name</th>
+        <th>Teacher</th>
+        {% if current_user.role == "admin" or current_user.role == "teacher" %}
+        <th>Students</th>
+        {% else %}
+        <th>Grade</th>
+        {% endif %}
+    </tr>
 
-    {% if current_user.role == "admin" %}
-    <a href="/courses/add_course">Add Course</a>
-    <br><br>
-    {% endif %}
+    {% for c in courses %}
+    <tr class="clickable-row" data-href="{% if current_user.role == 'admin' %}
+                   {{ url_for('courses.edit_course', course_id=c.id) }}
+               {% else %}
+                   {{ url_for('courses.assessments', course_id=c.id) }}
+               {% endif %}" onclick="window.location=this.dataset.href">
 
-    <table style="width: 100%; border-collapse: collapse;" border="1" cellpadding="8">
-        <tr>
-            <th>Course name</th>
-            <th>Teacher</th>
-            {% if current_user.role == "admin" or current_user.role == "teacher" %}
-            <th>Students</th>
+
+        <td>{{ c.name }}</td>
+
+        <td>
+            {% if c.teacher_first_name %}
+            {{ c.teacher_first_name }} {{ c.teacher_last_name }}
+            {% else %}
+            <i>No teacher assigned</i>
             {% endif %}
-            {% if current_user.role == "admin" %}
-            <th></th>
-            {% endif %}
-        </tr>
+        </td>
 
-        {% for c in courses %}
-        <tr>
-            <td>{{ c.name }}</td>
+        {% if current_user.role == "admin" or current_user.role == "teacher" %}
+        <td>{{ c.studentCount }}</td>
+        {% else %}
+        <td>0.00</td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
 
-            <td>
-                {% if c.teacherFirstName %}
-                {{ c.teacherFirstName }} {{ c.teacherLastName }}
-                {% else %}
-                <i>No teacher assigned</i>
-                {% endif %}
-            </td>
-
-            {% if current_user.role == "admin" or current_user.role == "teacher" %}
-            <td>{{ c.studentCount }}</td>
-            {% endif %}
-
-
-            {% if current_user.role == "admin" %}
-            <td>
-                <center><a href="/courses/edit_course/{{ c.id }}">Edit</a></center>
-            </td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </table>
-
-    {% endblock %}
-
-</body>
-
-</html>
+{% endblock %}
