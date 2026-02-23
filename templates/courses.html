@@ -38,9 +38,15 @@
         </td>
 
         {% if current_user.role == "admin" or current_user.role == "teacher" %}
-        <td>{{ c.studentCount }}</td>
+        <td>{% if c.active_students is not none %}
+            {{ c.active_students }}
+            {% endif %}
+        </td>
         {% else %}
-        <td>0.00</td>
+        <td>{% if c.final_grade is not none %}
+            {{ c.final_grade }}
+            {% endif %}
+        </td>
         {% endif %}
     </tr>
     {% endfor %}

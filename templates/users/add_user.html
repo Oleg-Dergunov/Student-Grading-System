@@ -5,7 +5,11 @@
 <h1>Add New User</h1>
 
 {% if error %}
-<p style="color:red; font-weight:bold;">{{ error }}</p>
+<p class="msg-error">{{ error }}</p>
+{% endif %}
+
+{% if success %}
+<p class="msg-success">{{ success }}</p>
 {% endif %}
 
 <form method="POST">

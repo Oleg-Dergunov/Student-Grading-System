@@ -7,16 +7,38 @@ from repositories.courses_repository import (
     update_course
 )
 from repositories.users_repository import get_user_by_id, get_all_teachers
+from services.enrollments_service import count_active_students_for_course
+
 
 
 def get_courses_for_user(role: str, user_id: int):
     if role == "admin":
-        return fetch_all_courses_for_admin()
+        courses = fetch_all_courses_for_admin()
 
-    if role == "teacher":
-        return fetch_courses_for_teacher(user_id)
+    elif role == "teacher":
+        courses = fetch_courses_for_teacher(user_id)
 
-    return fetch_courses_for_student(user_id)
+    else:  # student
+        courses = fetch_courses_for_student(user_id)
+
+    enriched = []
+
+    for c in courses:
+        course = dict(c)  # Transform Row into dict
+
+        if role in ("admin", "teacher"):
+            count, _ = count_active_students_for_course(course["id"])
+            course["active_students"] = count
+            course["final_grade"] = None
+
+        else:  # student
+            course["active_students"] = None
+            course["final_grade"] = None  # STUB
+
+        enriched.append(course)
+
+    return enriched
+
 
 
 def add_course(name: str):
@@ -43,9 +65,14 @@ def process_course_edit(course_id: int, form):
 
     # Normalize teacher_id
     teacher_id_raw = form.get("teacher_id")
-    if teacher_id_raw == "" or teacher_id_raw is None:
+
+    if teacher_id_raw is None or teacher_id_raw.strip() == "":
         teacher_id = None
     else:
+        # Checking if a value is a number
+        if not teacher_id_raw.isdigit():
+            raise ValueError("Wrong teacher id")
+
         teacher_id = int(teacher_id_raw)
 
     # Load current course
@@ -53,13 +80,19 @@ def process_course_edit(course_id: int, form):
     if not current:
         raise ValueError("Course not found")
 
-    # Check teacher activity
+    # Validate teacher
     if teacher_id is not None:
         teacher = get_user_by_id(teacher_id)
 
+        # 1) There is no such user
         if not teacher:
-            raise ValueError("Teacher does not exist")
+            raise ValueError("Teacher with such id does not exist")
 
+        # 2) User is not a teacher
+        if teacher["role"] != "teacher":
+            raise ValueError("Cannot assign a user, who is not a teacher")
+
+        # 3) Teacher is not active
         if not teacher["active"]:
             raise ValueError("Cannot assign an inactive teacher")
 

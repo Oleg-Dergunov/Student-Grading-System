@@ -48,6 +48,20 @@
 }
 
 
+/* Error and success messages */
+.msg-error {
+    color: red;
+    font-weight: bold;
+    margin: 10px 0;
+}
+.msg-success {
+    color: green;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+
+
 /* All text fields, email, password, numbers, etc. */
 /*
 input[type="text"],

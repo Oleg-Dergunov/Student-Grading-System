@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Manage Enrolments for {{ course.name }}</h1>
+
+{% if error %}
+<p class="msg-error">{{ error }}</p>
+{% endif %}
+
+{% if success %}
+<p class="msg-success">{{ success }}</p>
+{% endif %}
+
+<form method="POST">
+
+    <input type="hidden" name="action" value="enroll">
+
+    <label>Enroll a student</label><br>
+
+    {# ---------- Form parameters for the component ---------- #}
+
+    {% set items = [] %}
+
+    {% for s in students %}
+    {% if s.id not in enrolled_ids %}
+    {% set _ = items.append({
+    "id": s.id,
+    "label": "%05d"|format(s.id) ~ " - " ~ s.last_name ~ " " ~ s.first_name,
+    "search": "%05d"|format(s.id) ~ " " ~ s.last_name ~ " " ~ s.first_name
+    }) %}
+    {% endif %}
+    {% endfor %}
+
+    {% set current_label = "" %}
+
+    {% set placeholder = "Type student ID or choose from the list" %}
+    {% set name = "student_id" %}
+
+    {# ---------- Inserting a component ---------- #}
+    {% include "components/dropdown.html" %}
+
+    <br>
+
+    <button type="submit">Enroll</button>
+</form>
+
+
+<hr>
+
+
+<h2>Currently Enrolled Students</h2>
+
+<table style="width: 100%; border-collapse: collapse;" border="1" cellpadding="8">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+    </tr>
+
+    {% for s in students %}
+    {% if s.id in enrolled_ids %}
+    <tr class="clickable-row" data-confirm-action="unenroll-form-{{ s.id }}"
+        data-confirm-message="Unenroll {{ '%05d'|format(s.id) }} from the course?">
+
+        <td>{{ "%05d"|format(s.id) }}</td>
+        <td>{{ s.last_name }} {{ s.first_name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ "Active" if s.active else "Inactive" }}</td>
+    </tr>
+
+    <form id="unenroll-form-{{ s.id }}" method="POST" style="display:none;">
+        <input type="hidden" name="action" value="unenroll">
+        <input type="hidden" name="student_id" value="{{ s.id }}">
+    </form>
+
+    {% endif %}
+    {% endfor %}
+</table>
+
+
+<br><br>
+<a href="/courses/{{ course.id }}/edit">← Back to course</a>
+
+{% endblock %}

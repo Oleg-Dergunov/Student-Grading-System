@@ -1,4 +1,4 @@
-from repositories.auth_repository import (
+from repositories.users_repository import (
     find_user_by_id_and_password,
     find_user_by_email_and_password
 )

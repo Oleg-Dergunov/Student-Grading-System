@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from routes.auth import login_required, admin_required
 from services.courses_service import get_courses_for_user, add_course
+from services.enrollments_service import count_active_students_for_course
 
 courses_bp = Blueprint("courses", __name__)
 
@@ -76,10 +77,13 @@ def edit_course(course_id):
 
     teachers = load_teachers_for_course_edit()
 
+    active_enroled, error = count_active_students_for_course(course_id)
+
     return render_template(
         "courses/edit_course.html",
         course=course,
         teachers=teachers,
+        active_enroled=active_enroled,
         error=error,
         success=success
     )
@@ -88,5 +92,5 @@ def edit_course(course_id):
 # Assessments page
 @courses_bp.route("/courses/<int:course_id>/assessments")
 @login_required
-def course_assessments_stub(course_id):
-    return "Assessments page is temporarily disabled for debugging", 200
+def assessments(course_id):
+    return "Assessments page is not ready", 200
