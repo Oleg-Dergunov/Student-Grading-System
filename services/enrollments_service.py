@@ -74,7 +74,7 @@ def unenroll_student(course_id, student_id):
 
 
     unenroll_student_repo(course_id, student_id)
-    return f"Student {student_id:05d} - {student["last_name"]} {student["first_name"]} was unenrolled", None
+    return f"Student {student_id:05d} - {student['last_name']} {student['first_name']} was unenrolled", None
 
 
 def count_active_students_for_course(course_id):
